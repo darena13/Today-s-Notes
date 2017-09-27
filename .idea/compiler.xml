@@ -20,7 +20,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Today's Notes" target="1.5" />
+      <module name="Today's Notes" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

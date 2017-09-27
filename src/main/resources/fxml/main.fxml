@@ -8,10 +8,10 @@
 <GridPane alignment="CENTER" prefHeight="400.0" prefWidth="600.0" vgap="15.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
    <children>
       <Button fx:id="addNote" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addNote" prefHeight="36.0" prefWidth="100.0" text="Add note" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-      <TableView prefHeight="309.0" prefWidth="566.0" GridPane.rowIndex="2">
+      <TableView fx:id="noteTable" prefHeight="309.0" prefWidth="566.0" GridPane.rowIndex="2">
         <columns>
-          <TableColumn prefWidth="-1.0" text="Date" />
-            <TableColumn prefWidth="-1.0" text="Note" />
+          <TableColumn fx:id="dateColumn" prefWidth="-1.0" text="Date" />
+            <TableColumn fx:id="textColumn" prefWidth="-1.0" text="Note" />
         </columns>
          <GridPane.margin>
             <Insets />

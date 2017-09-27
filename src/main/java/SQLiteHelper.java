@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.time.LocalDate;
 
 public class SQLiteHelper {
     private static Connection con;
@@ -26,10 +27,11 @@ public class SQLiteHelper {
                 //создаем таблицу
                 Statement stateForBuilding = con.createStatement();
                 stateForBuilding.executeUpdate("create table notes(id integer,"
-                        + "date varchar(60)," + "note varchar(100)," + "primary key (id));");
+                        + "date varchar(100)," + "note varchar(100)," + "primary key (id));");
 
                 //добавляем одну запись
                 PreparedStatement prep = con.prepareStatement("insert into notes values(?,?,?);");
+//                prep.setDate(2, Date.valueOf(LocalDate.of(2000, 1, 1)));
                 prep.setString(2, "01.01.2000");
                 prep.setString(3, "Today was a good day. I spend some time outside. It was nice.");
                 prep.execute();
@@ -37,7 +39,7 @@ public class SQLiteHelper {
         }
     }
 
-    public void addNote(String date, String note) throws ClassNotFoundException, SQLException {
+    public void addNote(Note note) throws ClassNotFoundException, SQLException {
         //подключаемся, если еще не
         if(con == null) {
             getConnection();
@@ -45,8 +47,8 @@ public class SQLiteHelper {
         //готовим запрос к БД
         PreparedStatement prep = con
                 .prepareStatement("insert into notes values(?,?,?);");
-        prep.setString(2, date);
-        prep.setString(3, note);
+        prep.setString(2, note.getDate().toString());
+        prep.setString(3, note.getText());
         //и исполняем его
         prep.execute();
     }
