@@ -1,28 +1,24 @@
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-import java.sql.Date;
-import java.time.LocalDate;
-
 public class Note {
-    private ObjectProperty<LocalDate> date;
+    private SimpleStringProperty date;
     private SimpleStringProperty text;
 
     public Note(String date, String text) {
-        this.date = new SimpleObjectProperty<LocalDate>(new Date(Long.parseLong(date)).toLocalDate());
+        this.date = new SimpleStringProperty(date);
         this.text = new SimpleStringProperty(text);
     }
 
-    public LocalDate getDate() {
+
+    public String getDate() {
         return date.get();
     }
 
-    public ObjectProperty<LocalDate> dateProperty() {
+    public SimpleStringProperty dateProperty() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date.set(date);
     }
 

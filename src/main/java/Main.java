@@ -24,22 +24,8 @@ public class Main extends Application {
         //инициализируем макет и подключаем контроллер
         initLayout();
 
-        //подключаемся к БД
-        SQLiteHelper test = new SQLiteHelper();
-        //таблица с данными из результата запроса к БД
-        ResultSet rs;
-        try {
-            rs = test.getNotes();
-
-            while (rs.next()) {
-                System.out.println(rs.getString("date") + " " + rs.getString("note"));
-                //.getDate return object as java.sql.Date object
-                noteData.add(new Note(rs.getString("date"), rs.getString("note")));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        //заполняем наблюдаемый список данными из БД
+        populateTable();
     }
 
     public void initLayout() {
@@ -55,9 +41,28 @@ public class Main extends Application {
             primaryStage.show();
 
             //даём контроллеру доступ к главному приложению
-            Controller controller = loader.getController();
-            controller.setMainApp(this);
+            MainController controller = loader.getController();
+            //заполняем таблицу данными из наблюдаемого списка
+            controller.populateTable(this);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void populateTable() {
+        //подключаемся к БД
+        SQLiteHelper sqLiteHelper = new SQLiteHelper();
+        //таблица с данными из результата запроса к БД
+        ResultSet rs;
+        try {
+            rs = sqLiteHelper.getNotes();
+
+            while (rs.next()) {
+                System.out.println(rs.getString("date") + " " + rs.getString("note"));
+                noteData.add(new Note(rs.getString("date"), rs.getString("note")));
+            }
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -67,7 +72,7 @@ public class Main extends Application {
         return primaryStage;
     }
 
-    //возаращаем наблюдаемый список заметок
+    //возвращаем наблюдаемый список заметок
     public ObservableList<Note> getNotesData() {
         return noteData;
     }
