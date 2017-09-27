@@ -32,8 +32,6 @@ public class SQLiteHelper {
 
                 //добавляем одну запись
                 PreparedStatement prep = con.prepareStatement("insert into notes values(?,?,?);");
-//                prep.setDate(2, Date.valueOf(LocalDate.of(2000, 1, 1)));
-//                prep.setString(2, LocalDate.of(2000, 1, 1).toString());
                 prep.setString(2, new Date().toString());
                 prep.setString(3, "Today was a good day. I spend some time outside. It was nice.");
                 prep.execute();

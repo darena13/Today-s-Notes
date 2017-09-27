@@ -6,14 +6,13 @@ import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 
 public class Main extends Application {
     private Stage primaryStage;
     private GridPane rootLayout;
     //наблюдаемый список заметок
-    private ObservableList<Note> noteData = FXCollections.observableArrayList();
+    private ObservableList<Note> noteDataList = FXCollections.observableArrayList();
 
     //основной метод для JavaFX-приложений
     @Override
@@ -21,35 +20,26 @@ public class Main extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Today's Notes");
 
-        //инициализируем макет и подключаем контроллер
-        initLayout();
+        //загружаем корневой макет из fxml файла
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource("/fxml/main.fxml"));
+        rootLayout = loader.load();
+
+        //отображаем сцену, содержащую корневой макет
+        Scene scene = new Scene(rootLayout);
+        primaryStage.setScene(scene);
+        primaryStage.show();
 
         //заполняем наблюдаемый список данными из БД
-        populateTable();
+        fillTheList();
+
+        //даём контроллеру доступ к главному приложению
+        MainController controller = loader.getController();
+        //заполняем таблицу данными из наблюдаемого списка
+        controller.populateTable(this);
     }
 
-    public void initLayout() {
-        try {
-            //загружаем корневой макет из fxml файла
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("/fxml/main.fxml"));
-            rootLayout = (GridPane) loader.load();
-
-            //отображаем сцену, содержащую корневой макет
-            Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-
-            //даём контроллеру доступ к главному приложению
-            MainController controller = loader.getController();
-            //заполняем таблицу данными из наблюдаемого списка
-            controller.populateTable(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void populateTable() {
+    public void fillTheList() {
         //подключаемся к БД
         SQLiteHelper sqLiteHelper = new SQLiteHelper();
         //таблица с данными из результата запроса к БД
@@ -58,8 +48,8 @@ public class Main extends Application {
             rs = sqLiteHelper.getNotes();
 
             while (rs.next()) {
+                noteDataList.add(new Note(rs.getString("date"), rs.getString("note")));
                 System.out.println(rs.getString("date") + " " + rs.getString("note"));
-                noteData.add(new Note(rs.getString("date"), rs.getString("note")));
             }
 
         } catch (Exception e) {
@@ -74,7 +64,7 @@ public class Main extends Application {
 
     //возвращаем наблюдаемый список заметок
     public ObservableList<Note> getNotesData() {
-        return noteData;
+        return noteDataList;
     }
 
     //обычно не вызывается, но на всякий пожарный надо чтоб был

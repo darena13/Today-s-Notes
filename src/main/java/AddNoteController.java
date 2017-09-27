@@ -26,12 +26,11 @@ public class AddNoteController {
             //заполняем поля note
             note.setDate(new Date().toString());
             note.setText(textField.getText());
-            //смотрим что получилось
-            System.out.printf(note.getDate());
-            System.out.printf(note.getText());
+
             //подключаемся к БД
             SQLiteHelper sqLiteHelper = new SQLiteHelper();
             try {
+                //добавляем в бд новую запись
                 sqLiteHelper.addNote(note);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
