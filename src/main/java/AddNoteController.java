@@ -5,12 +5,16 @@ import javafx.stage.Stage;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 public class AddNoteController {
     @FXML
     private TextField textField;
 
     private Stage dialogStage;
+    private BlockingQueue<DBEvent> eventQueue;
+
     private Note note = new Note(null, null);
 
     @FXML
@@ -26,17 +30,8 @@ public class AddNoteController {
             //заполняем поля note
             note.setDate(new Date().toString());
             note.setText(textField.getText());
-
-            //подключаемся к БД
-            SQLiteHelper sqLiteHelper = new SQLiteHelper();
-            try {
-                //добавляем в бд новую запись
-                sqLiteHelper.addNote(note);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            //добавляем событие в очередь событий, чтобы БД-поток узнал о нем
+            eventQueue.add(new AddEvent(note));
             //закрываем окно
             dialogStage.close();
         }
@@ -44,5 +39,9 @@ public class AddNoteController {
 
     private boolean isInputValid() {
         return true;
+    }
+
+    public void setEventQueue(BlockingQueue<DBEvent> eventQueue) {
+        this.eventQueue = eventQueue;
     }
 }

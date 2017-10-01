@@ -1,3 +1,4 @@
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,6 +10,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 public class MainController {
     @FXML
@@ -17,6 +20,12 @@ public class MainController {
     private TableColumn<Note, String> dateColumn;
     @FXML
     private TableColumn<Note, String> textColumn;
+
+    final private BlockingQueue<DBEvent> eventQueue = new ArrayBlockingQueue<DBEvent>(1);
+
+    public BlockingQueue<DBEvent> getEventQueue() {
+        return eventQueue;
+    }
 
     //вызывается автоматически после загрузки fxml-файла
     @FXML
@@ -27,17 +36,13 @@ public class MainController {
     }
 
     //основной класс приложения сам вызовет этот метод
-    public void populateTable(Main mainApp) {
+    public void populateTable(ObservableList<Note> noteDataList) {
         //добавляем в таблицу данные из наблюдаемого списка ObservableList<Note>
-        noteTable.setItems(mainApp.getNotesData());
+        noteTable.setItems(noteDataList);
     }
 
     public void addNoteDialog(ActionEvent actionEvent) {
-        //показать окошко - done
-        //получить данные, создать объект - done
-        //отправить обхект в addNote хэлпера - done
-        //и наблюдаемому списку рассказать про новый объект - TODO
-        //и таблицу обновить - TODO
+        //создаем окошко для добавления записи
         try {
             //создаем диалоговое окно
             FXMLLoader loader = new FXMLLoader();
@@ -51,6 +56,8 @@ public class MainController {
 
             //контроллер диалогового окна
             AddNoteController controller = loader.getController();
+            //передаем ссылку на очередь событий
+            controller.setEventQueue(eventQueue);
             controller.setDialogStage(dialogStage);
 
             //ждём пока пользователь не закроет

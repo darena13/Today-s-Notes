@@ -1,8 +1,9 @@
 import javafx.beans.property.SimpleStringProperty;
 
 public class Note {
-    private SimpleStringProperty date;
-    private SimpleStringProperty text;
+    //final чтобы immutable для потокобезопасности
+    final private SimpleStringProperty date;
+    final private SimpleStringProperty text;
 
     public Note(String date, String text) {
         this.date = new SimpleStringProperty(date);

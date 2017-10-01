@@ -1,5 +1,4 @@
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.Date;
 
 public class SQLiteHelper {
@@ -16,14 +15,14 @@ public class SQLiteHelper {
     }
 
     private void initialise() throws SQLException {
-        if( !hasData ) {
+        if (!hasData) {
             hasData = true;
             //создаем Statement для отправления запросов к БД
             Statement stateToCheck = con.createStatement();
             //получаем результат запроса к БД
             ResultSet res = stateToCheck.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='notes'");
             //если таблицы notes еще нет, нужно её создать
-            if( !res.next()) {
+            if (!res.next()) {
                 System.out.println("Building table 'notes'.");
                 //создаем таблицу
                 Statement stateForBuilding = con.createStatement();
@@ -41,7 +40,7 @@ public class SQLiteHelper {
 
     public void addNote(Note note) throws ClassNotFoundException, SQLException {
         //подключаемся, если еще не
-        if(con == null) {
+        if (con == null) {
             getConnection();
         }
         //готовим запрос к БД
@@ -55,7 +54,7 @@ public class SQLiteHelper {
 
     public ResultSet getNotes() throws SQLException, ClassNotFoundException {
         //подключаемся, если еще не
-        if(con == null) {
+        if (con == null) {
             getConnection();
         }
         //получаем результаты запроса к БД
