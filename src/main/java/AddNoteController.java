@@ -3,9 +3,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import java.sql.SQLException;
+import java.text.DateFormat;
 import java.util.Date;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 public class AddNoteController {
@@ -28,7 +27,7 @@ public class AddNoteController {
     public void addNote(ActionEvent actionEvent) {
         if (isInputValid()) {
             //заполняем поля note
-            note.setDate(new Date().toString());
+            note.setDate(DateFormat.getDateTimeInstance().format(new Date()));
             note.setText(textField.getText());
             //добавляем событие в очередь событий, чтобы БД-поток узнал о нем
             eventQueue.add(new AddEvent(note));
